@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Button, Container, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
-import { Loader } from "./";
+import { Loader } from ".";
 import {
   useGetPostsQuery,
   useUploadPostImageMutation,
-  useCreatePostMutation,
+  useUpdatePostMutation,
 } from "../slices/postsApiSlice";
 
 import "react-tagsinput/react-tagsinput.css";
 
-const PostModal = ({ isOpen, closeModal }) => {
+const PostEditModal = ({ post, isOpen, closeModal }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
@@ -21,25 +21,36 @@ const PostModal = ({ isOpen, closeModal }) => {
   const { refetch } = useGetPostsQuery();
   const [uploadPostImage, { isLoading: loadingUpload }] =
     useUploadPostImageMutation();
-  const [createPost, { isLoading: loadingCreate }] = useCreatePostMutation();
+  const [updatePost, { isLoading: loadingUpdate }] = useUpdatePostMutation();
+
+  useEffect(() => {
+    setTitle(post.title);
+    setContent(post.content);
+    setImage(post.image);
+    setTags(post.tags);
+    setIsPrivate(post.isPrivate);
+  }, [post]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await createPost({
-        title,
-        content,
-        image,
-        tags,
-        isPrivate,
-      }).unwrap();
+    if (window.confirm("Are you sure you want to edit this post?")) {
+      try {
+        await updatePost({
+          postId: post._id,
+          title,
+          content,
+          image,
+          tags,
+          isPrivate,
+        }).unwrap();
 
-      toast.success("Post created");
-      refetch();
-      closeModal();
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
+        toast.success("Post updated");
+        refetch();
+        closeModal();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
     }
   };
 
@@ -59,7 +70,7 @@ const PostModal = ({ isOpen, closeModal }) => {
   return (
     <Modal show={isOpen} onHide={closeModal} backdrop="static">
       <Modal.Header closeButton>
-        <Modal.Title>Create Post</Modal.Title>
+        <Modal.Title>Edit Post</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
@@ -123,13 +134,13 @@ const PostModal = ({ isOpen, closeModal }) => {
             Close
           </Button>
           <Button type="submit" variant="primary">
-            Create
+            Edit
           </Button>
         </Modal.Footer>
       </Form>
-      {loadingCreate && <Loader />}
+      {loadingUpdate && <Loader />}
     </Modal>
   );
 };
 
-export default PostModal;
+export default PostEditModal;

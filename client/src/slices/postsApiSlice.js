@@ -7,6 +7,7 @@ export const postsApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: POSTS_URL,
       }),
+      providesTags: ["Post"],
       keepUnusedDataFor: 5,
     }),
     uploadPostImage: builder.mutation({
@@ -24,6 +25,27 @@ export const postsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Post"],
     }),
+    updatePost: builder.mutation({
+      query: (data) => ({
+        url: `${POSTS_URL}/${data.postId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Post"],
+    }),
+    deletePost: builder.mutation({
+      query: (postId) => ({
+        url: `${POSTS_URL}/${postId}`,
+        method: "DELETE",
+      }),
+    }),
+    likeCountUp: builder.mutation({
+      query: (postId) => ({
+        url: `${POSTS_URL}/${postId}/likecount`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Post"],
+    }),
   }),
 });
 
@@ -31,4 +53,7 @@ export const {
   useGetPostsQuery,
   useUploadPostImageMutation,
   useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+  useLikeCountUpMutation,
 } = postsApiSlice;

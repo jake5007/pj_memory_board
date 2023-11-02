@@ -1,13 +1,49 @@
-import { Card, Image } from "react-bootstrap";
-import { BsHeartFill, BsTrashFill } from "react-icons/bs";
+import { useState } from "react";
+import { Card } from "react-bootstrap";
+import { BsHeartFill, BsHeart, BsTrashFill } from "react-icons/bs";
+import { AiFillEdit } from "react-icons/ai";
+import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { Loader, PostEditModal } from "./";
+import {
+  useGetPostsQuery,
+  useDeletePostMutation,
+  useLikeCountUpMutation,
+} from "../slices/postsApiSlice";
 
 const Post = ({ post }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
 
+  const [likeCountUp] = useLikeCountUpMutation();
+  const [deletePost, { isLoading: loadingDelete }] = useDeletePostMutation();
+  const { refetch } = useGetPostsQuery();
+
+  const handleLikeCountUp = async (id) => {
+    try {
+      const { message } = await likeCountUp(id).unwrap();
+      refetch();
+      toast.success(message);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        await deletePost(id);
+        refetch();
+        toast.success("Post deleted");
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  };
+
   return (
-    <Card className="my-3 shadow">
+    <Card className="w-100 my-3 shadow">
       <Card.Img
         variant="top"
         src={post.image}
@@ -35,15 +71,40 @@ const Post = ({ post }) => {
           color: "red",
         }}
       >
-        <div style={{ cursor: "pointer", zIndex: "1" }}>
-          <BsHeartFill /> {post.likeCount}
+        <div
+          style={{ cursor: "pointer", zIndex: "1" }}
+          onClick={() => handleLikeCountUp(post._id)}
+        >
+          {post?.likedBy.includes(userInfo?._id) ? (
+            <BsHeartFill />
+          ) : (
+            <BsHeart />
+          )}{" "}
+          {post.likeCount}
         </div>
         {userInfo && userInfo._id === post.user._id && (
-          <div style={{ cursor: "pointer", zIndex: "1" }}>
-            <BsTrashFill /> Delete
+          <div className="d-flex gap-3">
+            <div
+              style={{ cursor: "pointer", color: "blue", zIndex: "1" }}
+              onClick={() => setIsOpen(true)}
+            >
+              <AiFillEdit /> Edit
+            </div>
+            <div
+              style={{ cursor: "pointer", zIndex: "1" }}
+              onClick={() => handleDelete(post._id)}
+            >
+              <BsTrashFill /> Delete
+            </div>
           </div>
         )}
       </div>
+      {loadingDelete && <Loader />}
+      <PostEditModal
+        post={post}
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+      />
     </Card>
   );
 };

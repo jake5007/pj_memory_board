@@ -5,7 +5,7 @@ import Post from "../models/PostModel.js";
 // @routes GET /api/posts
 // @access Public
 export const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({}).populate("user", "name");
+  const posts = await Post.find({ isPrivate: false }).populate("user", "name");
 
   res.status(200).json(posts);
 });
@@ -42,16 +42,42 @@ export const createPost = asyncHandler(async (req, res) => {
 // @desc Update a post
 // @routes PUT /api/posts/:id
 // @access Private
-export const updatePost = (req, res) => {
-  res.send("update post");
-};
+export const updatePost = asyncHandler(async (req, res) => {
+  const { title, tags, content, image, isPrivate } = req.body;
+
+  const post = await Post.findById(req.params.id);
+
+  if (post) {
+    post.title = title;
+    post.tags = tags;
+    post.content = content;
+    post.image = image;
+    post.isPrivate = isPrivate;
+
+    const updatedPost = await post.save();
+
+    res.json(updatedPost);
+  } else {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
+});
 
 // @desc Delete a post
 // @routes DELETE /api/posts/:id
 // @access Private
-export const deletePost = (req, res) => {
-  res.send("delete post");
-};
+export const deletePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  if (post) {
+    await Post.deleteOne({ _id: post._id });
+
+    res.status(200).json({ message: "Post deleted" });
+  } else {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
+});
 
 // @desc Create a post comment
 // @routes POST /api/posts/:id/comments
@@ -60,9 +86,33 @@ export const createPostComment = (req, res) => {
   res.send("create post comment");
 };
 
+{
+  /* Update comment, delete comment */
+}
+
 // @desc like count up
 // @routes PUT /api/posts/:id/likeCount
 // @access Private
-export const likeCountUp = (req, res) => {
-  res.send("Like count up");
-};
+export const likeCountUp = asyncHandler(async (req, res) => {
+  let post = await Post.findById(req.params.id);
+  let message;
+
+  if (post) {
+    if (post?.likedBy && post.likedBy.includes(req.user._id)) {
+      post.likeCount--;
+      post.likedBy = post.likedBy.filter((id) => !id.equals(req.user._id));
+      message = "You've unliked this post.";
+    } else {
+      post.likeCount++;
+      post.likedBy.push(req.user._id);
+      message = "You've liked this post.";
+    }
+
+    const updatedPost = await post.save();
+
+    res.status(200).json({ message, updatedPost });
+  } else {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
+});

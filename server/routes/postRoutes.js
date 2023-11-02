@@ -14,8 +14,12 @@ const router = Router();
 
 router.route("/").get(getPosts).post(protect, createPost);
 
-router.route("/:id").get(getPostById).put(updatePost).delete(deletePost);
+router
+  .route("/:id")
+  .get(getPostById)
+  .put(protect, updatePost)
+  .delete(protect, deletePost);
 router.route("/:id/comments").post(createPostComment);
-router.route("/:id/likecount").put(likeCountUp);
+router.route("/:id/likecount").put(protect, likeCountUp);
 
 export default router;
