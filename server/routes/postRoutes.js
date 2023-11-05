@@ -19,7 +19,7 @@ router
   .get(getPostById)
   .put(protect, updatePost)
   .delete(protect, deletePost);
-router.route("/:id/comments").post(createPostComment);
+router.route("/:id/comments").post(protect, createPostComment);
 router.route("/:id/likecount").put(protect, likeCountUp);
 
 export default router;

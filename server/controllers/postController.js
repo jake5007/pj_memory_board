@@ -5,7 +5,15 @@ import Post from "../models/PostModel.js";
 // @routes GET /api/posts
 // @access Public
 export const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ isPrivate: false }).populate("user", "name");
+  const posts = await Post.find({ isPrivate: false })
+    .populate("user", "name email")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "user",
+        select: "email",
+      },
+    });
 
   res.status(200).json(posts);
 });
@@ -81,10 +89,30 @@ export const deletePost = asyncHandler(async (req, res) => {
 
 // @desc Create a post comment
 // @routes POST /api/posts/:id/comments
-// @access Public
-export const createPostComment = (req, res) => {
-  res.send("create post comment");
-};
+// @access Private
+export const createPostComment = asyncHandler(async (req, res) => {
+  const { comment } = req.body;
+
+  const post = await Post.findById(req.params.id);
+
+  if (post) {
+    const postComment = {
+      user: req.user._id,
+      name: req.user.name,
+      comment,
+    };
+
+    post.comments.push(postComment);
+    post.numComments = post.comments.length;
+
+    await post.save();
+
+    res.status(201).json({ message: "Comment added" });
+  } else {
+    res.status(404);
+    throw new Error("Resource not found");
+  }
+});
 
 {
   /* Update comment, delete comment */
@@ -97,10 +125,15 @@ export const likeCountUp = asyncHandler(async (req, res) => {
   let post = await Post.findById(req.params.id);
   let message;
 
+  {
+    /* instead of adding count directly, how about setting likeCount using likedBy.length ?*/
+  }
   if (post) {
     if (post?.likedBy && post.likedBy.includes(req.user._id)) {
       post.likeCount--;
-      post.likedBy = post.likedBy.filter((id) => !id.equals(req.user._id));
+      post.likedBy = post.likedBy.filter(
+        (id) => id.toString() !== req.user._id.toString()
+      );
       message = "You've unliked this post.";
     } else {
       post.likeCount++;

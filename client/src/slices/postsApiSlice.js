@@ -39,6 +39,14 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    createPostComment: builder.mutation({
+      query: (data) => ({
+        url: `${POSTS_URL}/${data.postId}/comments`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Post"],
+    }),
     likeCountUp: builder.mutation({
       query: (postId) => ({
         url: `${POSTS_URL}/${postId}/likecount`,
@@ -55,5 +63,6 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  useCreatePostCommentMutation,
   useLikeCountUpMutation,
 } = postsApiSlice;
