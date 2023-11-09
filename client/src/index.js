@@ -11,7 +11,13 @@ import store from "./store";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
-import { HomeScreen, LoginScreen, RegisterScreen } from "./screens";
+import {
+  HomeScreen,
+  LoginScreen,
+  RegisterScreen,
+  ProfileScreen,
+} from "./screens";
+import { PrivateRoute } from "./components";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +25,10 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+
+      <Route path="" element={<PrivateRoute />}>
+        <Route path="/profile" element={<ProfileScreen />} />
+      </Route>
     </Route>
   )
 );

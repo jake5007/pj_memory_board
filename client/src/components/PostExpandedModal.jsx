@@ -139,12 +139,19 @@ const PostExpandedModal = ({ post, isExpanded, closeModal }) => {
                       <span>
                         <strong>{comment.name}</strong>{" "}
                         <span className="text-secondary">
-                          ({comment.user.email})
+                          {comment.createdAt.substring(0, 10)}{" "}
+                          {getCommentTime(comment.createdAt)}
                         </span>
                       </span>
                       <p>
-                        <span>{comment.createdAt.substring(0, 10)}</span>{" "}
-                        <span>{getCommentTime(comment.createdAt)}</span>
+                        <span
+                          className="text-secondary"
+                          style={{
+                            fontSize: "0.85em",
+                          }}
+                        >
+                          {comment.user.email}
+                        </span>
                       </p>
                       <p>{comment.comment}</p>
                     </ListGroup.Item>

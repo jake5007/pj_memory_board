@@ -130,16 +130,15 @@ export const likeCountUp = asyncHandler(async (req, res) => {
   }
   if (post) {
     if (post?.likedBy && post.likedBy.includes(req.user._id)) {
-      post.likeCount--;
       post.likedBy = post.likedBy.filter(
         (id) => id.toString() !== req.user._id.toString()
       );
       message = "You've unliked this post.";
     } else {
-      post.likeCount++;
       post.likedBy.push(req.user._id);
       message = "You've liked this post.";
     }
+    post.likeCount = post.likedBy.length;
 
     const updatedPost = await post.save();
 

@@ -93,9 +93,9 @@ const Post = ({ post }) => {
             gap-3
           
             ${
-              userInfo && userInfo._id !== post.user._id
-                ? "w-100 justify-content-between"
-                : ""
+              userInfo && userInfo._id === post.user._id
+                ? ""
+                : "w-100 justify-content-between"
             } 
           `}
         >

@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Image } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,6 +6,8 @@ import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import { FaUser } from "react-icons/fa";
 import logo from "../assets/logo_black.png";
+
+const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -38,14 +40,32 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <>
+                  <Image
+                    src={
+                      userInfo.image.length === 0
+                        ? "/images/default_profile.png"
+                        : userInfo.image
+                    }
+                    alt="avatar"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      objectFit: "cover",
+                    }}
+                    roundedCircle
+                    fluid
+                  />
+
+                  <NavDropdown title={capitalize(userInfo.name)} id="username">
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={handleLogout}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link>

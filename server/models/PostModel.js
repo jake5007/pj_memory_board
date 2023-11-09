@@ -45,7 +45,9 @@ const PostSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    likedBy: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true },
+    ],
     tags: {
       type: [String],
       required: true,
