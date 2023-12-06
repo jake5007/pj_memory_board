@@ -5,7 +5,7 @@ import Post from "../models/PostModel.js";
 // @routes GET /api/posts
 // @access Public
 export const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ isPrivate: false })
+  const posts = await Post.find({})
     .populate("user", "name email")
     .populate({
       path: "comments",

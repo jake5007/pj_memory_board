@@ -99,6 +99,7 @@ const ProfileScreen = () => {
               onChange={handleFileUpload}
             ></Form.Control>
           </Form.Group>
+          {loadingUploadImage && <Loader />}
 
           <Form.Group controlId="password" className="my-3">
             <Form.Label>Password</Form.Label>

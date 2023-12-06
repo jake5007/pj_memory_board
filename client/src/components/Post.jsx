@@ -28,7 +28,7 @@ const Post = ({ post }) => {
 
   const handleLikeCountUp = async (id) => {
     if (!userInfo) {
-      toast.error("You need to log in first");
+      toast.error("You have to log in first");
       return;
     }
 
