@@ -13,16 +13,23 @@ body {
 header {
   position: fixed;
   z-index: 10;
-  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
   box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.1);
 }
 
 main {
   min-height: 80vh;
+  margin-top: 80px;
 }
 
 a {
   text-decoration: none !important;
+}
+
+.avatar {
+  display: none;
 }
 
 .comment h3 {
@@ -60,6 +67,10 @@ a {
 @media (min-width: 768px) {
   .post-image {
     height: 260px;
+  }
+
+  .avatar {
+    display: block;
   }
 }
 

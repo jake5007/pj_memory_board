@@ -8,3 +8,4 @@ export { default as PostModal } from "./PostModal";
 export { default as PostEditModal } from "./PostEditModal";
 export { default as PostExpandedModal } from "./PostExpandedModal";
 export { default as PrivateRoute } from "./PrivateRoute";
+export { default as Paginate } from "./Paginate";

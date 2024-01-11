@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import asyncHandler from "../middleware/asyncHandler.js";
 import Post from "../models/PostModel.js";
 
@@ -5,7 +6,23 @@ import Post from "../models/PostModel.js";
 // @routes GET /api/posts
 // @access Public
 export const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({})
+  const userId = req.query.userId;
+  const visibility = req.query.visibility;
+  const docCond =
+    visibility === "public"
+      ? { isPrivate: false }
+      : visibility === "private"
+      ? { user: new Types.ObjectId(userId), isPrivate: true }
+      : { $or: [{ isPrivate: false }, { user: userId, isPrivate: true }] };
+
+  const pageSize = 4;
+  const page = Number(req.query.pageNum) || 1;
+
+  const count = await Post.countDocuments(docCond);
+
+  const posts = await Post.find(docCond)
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
     .populate("user", "name email")
     .populate({
       path: "comments",
@@ -15,7 +32,7 @@ export const getPosts = asyncHandler(async (req, res) => {
       },
     });
 
-  res.status(200).json(posts);
+  res.status(200).json({ posts, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc Get a post by id

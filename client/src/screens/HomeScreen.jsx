@@ -1,47 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Post, Loader, Message, PostModal } from "../components";
+import { Post, Loader, Message, PostModal, Paginate } from "../components";
 import { useGetPostsQuery } from "../slices/postsApiSlice";
 
 const HomeScreen = () => {
+  const { pageNum } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const [filteredPosts, setFilteredPosts] = useState([]);
-
-  const { data, isLoading, error } = useGetPostsQuery();
+  const [visibility, setVisibility] = useState("all");
 
   const { userInfo } = useSelector((state) => state.auth);
+  const userId = userInfo?._id;
 
-  useEffect(() => {
-    setFilteredPosts(data);
-  }, [data]);
-
-  const handleChange = (e) => {
-    const visibility = e.target.value;
-
-    if (visibility === "public") {
-      setFilteredPosts(data.filter((post) => post.isPrivate === false));
-    } else if (visibility === "private") {
-      console.log(userInfo._id.toString());
-      setFilteredPosts(
-        data.filter(
-          (post) =>
-            post.isPrivate === true &&
-            post.user._id.toString() === userInfo._id.toString()
-        )
-      );
-    } else {
-      setFilteredPosts(data);
-    }
-  };
+  const { data, isLoading, error } = useGetPostsQuery({
+    visibility: visibility || "all",
+    pageNum,
+    userId,
+  });
 
   return (
-    <>
+    <main>
       <div className="d-flex justify-content-between">
         <h2>Latest Posts</h2>
         {userInfo && (
           <div className="d-flex gap-3">
-            <Form.Select onChange={handleChange}>
+            <Form.Select onChange={(e) => setVisibility(e.target.value)}>
               <option value="all">All</option>
               <option value="public">Public</option>
               <option value="private">Private</option>
@@ -66,7 +50,7 @@ const HomeScreen = () => {
       ) : (
         <>
           <Row>
-            {filteredPosts?.map((post) => (
+            {data?.posts.map((post) => (
               <Col
                 sm={12}
                 md={6}
@@ -79,10 +63,11 @@ const HomeScreen = () => {
               </Col>
             ))}
           </Row>
+          <Paginate pages={data.pages} currPage={data.page} />
         </>
       )}
       <PostModal isOpen={isOpen} closeModal={() => setIsOpen(false)} />
-    </>
+    </main>
   );
 };
 export default HomeScreen;

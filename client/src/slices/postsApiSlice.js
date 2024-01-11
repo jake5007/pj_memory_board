@@ -4,8 +4,13 @@ import { apiSlice } from "./apiSlice";
 export const postsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query({
-      query: () => ({
+      query: ({ visibility, pageNum, userId }) => ({
         url: POSTS_URL,
+        params: {
+          visibility,
+          pageNum,
+          userId,
+        },
       }),
       providesTags: ["Post"],
       keepUnusedDataFor: 5,

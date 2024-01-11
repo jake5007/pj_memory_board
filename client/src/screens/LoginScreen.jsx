@@ -41,43 +41,45 @@ const LoginScreen = () => {
   };
 
   return (
-    <FormContainer>
-      <h1 className="my-4">Sign In</h1>
+    <main>
+      <FormContainer>
+        <h1 className="my-4">Sign In</h1>
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="email" className="my-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="email" className="my-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group controlId="password" className="my-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group controlId="password" className="my-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></Form.Control>
+          </Form.Group>
 
-        <Button type="submit" variant="primary" className="mt-3">
-          Sign In
-        </Button>
+          <Button type="submit" variant="primary" className="mt-3">
+            Sign In
+          </Button>
 
-        {isLoading && <Loader />}
-      </Form>
+          {isLoading && <Loader />}
+        </Form>
 
-      <Row className="my-3">
-        <Col>
-          Not a member? <Link to="/register">Register</Link>
-        </Col>
-      </Row>
-    </FormContainer>
+        <Row className="my-3">
+          <Col>
+            Not a member? <Link to="/register">Register</Link>
+          </Col>
+        </Row>
+      </FormContainer>
+    </main>
   );
 };
 

@@ -8,11 +8,9 @@ const App = () => {
   return (
     <>
       <Header />
-      <main className="py-3">
-        <Container>
-          <Outlet />
-        </Container>
-      </main>
+      <Container>
+        <Outlet />
+      </Container>
       <Footer />
       <ToastContainer autoClose={3000} />
     </>

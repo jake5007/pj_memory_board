@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="light" data-bs-theme="light" expand="lg" collapseOnSelect>
+      <Navbar bg="light" data-bs-theme="light" expand="md" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
@@ -42,6 +42,7 @@ const Header = () => {
               {userInfo ? (
                 <>
                   <Image
+                    className="avatar"
                     src={
                       userInfo.image.length === 0
                         ? "/images/default_profile.png"
