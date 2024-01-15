@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jake5007/project_memory_board.git"
+    "url": "git+https://github.com/jake5007/pj_memory_board.git"
   },
   "author": "Hyunjin Chae",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jake5007/project_memory_board/issues"
+    "url": "https://github.com/jake5007/pj_memory_board/issues"
   },
-  "homepage": "https://github.com/jake5007/project_memory_board#readme",
+  "homepage": "https://github.com/jake5007/pj_memory_board#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
