@@ -24,11 +24,13 @@ const PostEditModal = ({ post, isOpen, closeModal }) => {
   const [updatePost, { isLoading: loadingUpdate }] = useUpdatePostMutation();
 
   useEffect(() => {
-    setTitle(post.title);
-    setContent(post.content);
-    setImage(post.image);
-    setTags(post.tags);
-    setIsPrivate(post.isPrivate);
+    if (post) {
+      setTitle(post.title);
+      setContent(post.content);
+      setImage(post.image);
+      setTags(post.tags);
+      setIsPrivate(post.isPrivate);
+    }
   }, [post]);
 
   const handleSubmit = async (e) => {
@@ -66,6 +68,8 @@ const PostEditModal = ({ post, isOpen, closeModal }) => {
       toast.error(err?.data?.message || err.error);
     }
   };
+
+  if (!post) return null;
 
   return (
     <Modal show={isOpen} onHide={closeModal} backdrop="static">

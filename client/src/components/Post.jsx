@@ -74,18 +74,27 @@ const Post = ({ post }) => {
         alt="image"
         className="post-image"
       />
-      <Card.ImgOverlay className="text-white">
+      <Card.ImgOverlay className="text-white" style={{ pointerEvents: "none" }}>
         <div className="d-flex justify-content-between">
           <Card.Title className="text-capitalize">{post.user.name}</Card.Title>
-          <div role="button" onClick={() => setIsExpanded(true)}>
-            <BsArrowsAngleExpand />
+          <div
+            role="button"
+            onClick={() => setIsExpanded(true)}
+            style={{ pointerEvents: "auto", zIndex: 1 }}
+          >
+            <BsArrowsAngleExpand size={18} className="hover-icon" />
           </div>
         </div>
         <Card.Text>{moment(post.createdAt).fromNow()}</Card.Text>
       </Card.ImgOverlay>
 
       <Card.Body>
-        <Card.Title>{post.title}</Card.Title>
+        <Card.Title
+          className="hover-underline"
+          onClick={() => setIsExpanded(true)}
+        >
+          {post.title}
+        </Card.Title>
         <Card.Subtitle className="my-3 text-secondary fst-italic">
           {post?.tags.map((tag, idx) =>
             idx + 1 === post.tags.length ? `#${tag}` : `#${tag} `
