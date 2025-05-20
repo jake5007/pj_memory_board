@@ -7,7 +7,7 @@ import {
   useUploadUserImageMutation,
 } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
-import { Loader } from "../components";
+import { OverlayLoader } from "../components";
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -100,7 +100,7 @@ const ProfileScreen = () => {
                 onChange={handleFileUpload}
               ></Form.Control>
             </Form.Group>
-            {loadingUploadImage && <Loader />}
+            {loadingUploadImage && <OverlayLoader />}
 
             <Form.Group controlId="password" className="my-3">
               <Form.Label>Password</Form.Label>
@@ -125,7 +125,7 @@ const ProfileScreen = () => {
             <Button type="submit" variant="primary" className="my-2">
               Update
             </Button>
-            {loadingUpdate && <Loader />}
+            {loadingUpdate && <OverlayLoader />}
           </Form>
         </Col>
       </Row>

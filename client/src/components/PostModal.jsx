@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, Button, Container, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
-import { Loader } from "./";
+import { OverlayLoader } from "./";
 import {
   useGetPostsQuery,
   useUploadPostImageMutation,
@@ -105,7 +105,7 @@ const PostModal = ({ isOpen, closeModal }) => {
                 label="Choose file"
                 onChange={handleFileUpload}
               ></Form.Control>
-              {loadingUpload && <Loader />}
+              {loadingUpload && <OverlayLoader />}
 
               <Form.Group controlId="isPrivate" className="my-4">
                 <Form.Check
@@ -127,7 +127,7 @@ const PostModal = ({ isOpen, closeModal }) => {
           </Button>
         </Modal.Footer>
       </Form>
-      {loadingCreate && <Loader />}
+      {loadingCreate && <OverlayLoader />}
     </Modal>
   );
 };

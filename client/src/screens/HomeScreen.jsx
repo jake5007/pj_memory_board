@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Post, Loader, Message, PostModal, Paginate } from "../components";
+import {
+  Post,
+  OverlayLoader,
+  Message,
+  PostModal,
+  Paginate,
+} from "../components";
 import { useGetPostsQuery } from "../slices/postsApiSlice";
 
 const HomeScreen = () => {
@@ -42,7 +48,7 @@ const HomeScreen = () => {
         )}
       </div>
       {isLoading ? (
-        <Loader />
+        <OverlayLoader />
       ) : error ? (
         <Message variant="danger">
           {error?.data?.message || error?.error}

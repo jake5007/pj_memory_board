@@ -3,7 +3,7 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { FormContainer, Loader } from "../components";
+import { FormContainer, OverlayLoader } from "../components";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 
@@ -70,7 +70,7 @@ const LoginScreen = () => {
             Sign In
           </Button>
 
-          {isLoading && <Loader />}
+          {isLoading && <OverlayLoader />}
         </Form>
 
         <Row className="my-3">

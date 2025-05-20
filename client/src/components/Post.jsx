@@ -7,10 +7,11 @@ import {
   BsArrowsAngleExpand,
 } from "react-icons/bs";
 import { AiFillEdit, AiOutlineComment } from "react-icons/ai";
+import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { Loader, PostEditModal, PostExpandedModal } from "./";
+import { OverlayLoader, PostEditModal, PostExpandedModal } from "./";
 import {
   useGetPostsQuery,
   useDeletePostMutation,
@@ -22,7 +23,7 @@ const Post = ({ post }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [likeCountUp] = useLikeCountUpMutation();
+  const [likeCountUp, { isLoading: loadingLike }] = useLikeCountUpMutation();
   const [deletePost, { isLoading: loadingDelete }] = useDeletePostMutation();
   const { refetch } = useGetPostsQuery();
 
@@ -54,7 +55,19 @@ const Post = ({ post }) => {
   };
 
   return (
-    <Card className="w-100 my-3 shadow">
+    <Card className="w-100 my-3 shadow position-relative">
+      {/* loading while liking */}
+      {loadingLike && (
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            zIndex: 10,
+          }}
+        >
+          <ClipLoader color="#ffffff" size={50} />
+        </div>
+      )}
       <Card.Img
         variant="top"
         src={post.image}
@@ -101,8 +114,13 @@ const Post = ({ post }) => {
         >
           <div
             role="button"
-            style={{ zIndex: "1" }}
-            onClick={() => handleLikeCountUp(post._id)}
+            style={{
+              zIndex: "1",
+              pointerEvents: loadingLike ? "none" : "auto",
+              opacity: loadingLike ? 0.6 : 1,
+              cursor: loadingLike ? "not-allowed" : "pointer",
+            }}
+            onClick={() => !loadingLike && handleLikeCountUp(post._id)}
           >
             {post?.likedBy.includes(userInfo?._id) ? (
               <BsHeartFill />
@@ -136,7 +154,7 @@ const Post = ({ post }) => {
           </div>
         )}
       </div>
-      {loadingDelete && <Loader />}
+      {loadingDelete && <OverlayLoader />}
       <PostEditModal
         post={post}
         isOpen={isOpen}

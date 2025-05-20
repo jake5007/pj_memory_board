@@ -16,7 +16,7 @@ import {
   useGetPostsQuery,
   useCreatePostCommentMutation,
 } from "../slices/postsApiSlice";
-import { Loader, Message } from "./";
+import { OverlayLoader, Message } from "./";
 
 const getCommentTime = (createdTime) => {
   const date = new Date(createdTime);
@@ -104,7 +104,7 @@ const PostExpandedModal = ({ post, isExpanded, closeModal }) => {
           <Row className="comment">
             <Col>
               <h3>Comments</h3>
-              {loadingComment && <Loader />}
+              {loadingComment && <OverlayLoader />}
               {userInfo ? (
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="comment" className="my-3">
