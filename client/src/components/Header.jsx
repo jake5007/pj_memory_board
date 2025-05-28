@@ -54,6 +54,10 @@ const Header = () => {
                       height: "40px",
                       objectFit: "cover",
                     }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "/images/default_profile.png";
+                    }}
                     roundedCircle
                     fluid
                   />

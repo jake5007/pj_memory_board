@@ -70,9 +70,13 @@ const Post = ({ post }) => {
       )}
       <Card.Img
         variant="top"
-        src={post.image}
+        src={post.image.length > 0 ? post.image : "/images/default_cat.png"}
         alt="image"
         className="post-image"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/images/default_cat.png";
+        }}
       />
       <Card.ImgOverlay className="text-white" style={{ pointerEvents: "none" }}>
         <div className="d-flex justify-content-between">
